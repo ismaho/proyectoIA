@@ -1,0 +1,13 @@
+Objetivo
+Generar un algoritmo capaz de detectar polimorfismos en una cadena de ADN.
+Específicos 
+Estudiar sobre las cadenas de ADN
+Estudiar sobre polimorfismos de nucleótido simple
+Entrenamiento de algún algoritmo para identificar variaciones genéticas en varias secuencias de ADN
+Tareas a realizar
+-	Determinar el mejor modelo de entrenamiento a usar
+-	Determinar las posibles entradas del sistema
+-	Determinar cadenas con polimorfismos para entrenar al algoritmo
+-	Saber interpretar archivos fasta
+-	Lectura y análisis de archivos fasta con Biopython
+-	Entrenar la red para obtener los resultados requeridos 
