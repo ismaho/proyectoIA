@@ -50,3 +50,31 @@ def translate(chain):
 
 print(translate(Y))
 
+
+def convert(chain_letter):
+
+    table = {
+    'I': 1, 'M': 2, 'T':3, 'N': 4, 'K': 5, 
+    'S': 6, 'R': 7, 'L':8, 'P': 9, 'H': 10,
+    'Q': 11, 'V': 12, 'A': 13, 'D': 14, 'E': 15,
+    'G': 16, 'F': 17, 'Y': 18, '_': 19, 'C': 20, 
+    'W': 21,}
+    
+    aminoacid_number = []
+
+    for i in range(0, len(chain_letter), 1):
+            aminoacid_number.append(table[chain_letter[i]]) 
+
+    return aminoacid_number
+
+
+
+print(convert(translate(Y)))
+
+
+
+
+
+
+
+
