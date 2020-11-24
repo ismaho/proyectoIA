@@ -1,20 +1,22 @@
 from Bio.SeqIO import parse 
 from Bio.SeqRecord import SeqRecord 
 from Bio.Seq import Seq 
+from Bio import SeqIO
 
-file = open("protein-sequences-matching-IPR023859-for-UP000000265.fasta") 
-
+file = open("cowpox_virus_database.fasta") 
 records = parse(file, "fasta")
-""" 
+
+
 for record in records:    
    print("Id: %s" % record.id) 
    print("Name: %s" % record.name) 
    print("Description: %s" % record.description) 
    print("Annotations: %s" % record.annotations) 
-   print("Sequence Data: %s" % record.seq) 
-"""
+   Y = record.seq
 
-def translate(file):
+print(len(Y))
+
+def translate(chain):
     table = {
     'ATA':'I', 'ATC':'I', 'ATT':'I', 'ATG':'M',
     'ACA':'T', 'ACC':'T', 'ACG':'T', 'ACT':'T',
@@ -34,14 +36,17 @@ def translate(file):
     'TGC':'C', 'TGT':'C', 'TGA':'_', 'TGG':'W',}
     
     protein = ""
-    if len(file)%3 == 0:
-        for i in range(0, len(file), 3):
-            codon = file[i : i+3]
+
+    while (len(chain)%3) > 0:
+        chain += 'A'
+ 
+    if len(chain)%3 == 0:
+        for i in range(0, len(chain), 3):
+            codon = chain[i : i+3]
             protein += table[codon]
+            
+           
     return protein
-print (translate)
 
-
-   
-
+print(translate(Y))
 
