@@ -35,7 +35,7 @@ def translate(chain):
     'TAC':'Y', 'TAT':'Y', 'TAA':'_', 'TAG':'_',
     'TGC':'C', 'TGT':'C', 'TGA':'_', 'TGG':'W',}
     
-    protein = ""
+    aminoacid = ""
 
     while (len(chain)%3) > 0:
         chain += 'A'
@@ -43,10 +43,10 @@ def translate(chain):
     if len(chain)%3 == 0:
         for i in range(0, len(chain), 3):
             codon = chain[i : i+3]
-            protein += table[codon]
+            aminoacid += table[codon]
             
            
-    return protein
+    return aminoacid
 
 print(translate(Y))
 
