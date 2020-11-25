@@ -36,14 +36,19 @@ def translate(chain):
     'TGC':'C', 'TGT':'C', 'TGA':'_', 'TGG':'W',}
     
     aminoacid = ""
+    chain_len = len(chain) 
+    counter = 0
+
 
     while (len(chain)%3) > 0:
         chain += 'A'
+        counter += 1
  
     if len(chain)%3 == 0:
         for i in range(0, len(chain), 3):
-            codon = chain[i : i+3]
-            aminoacid += table[codon]
+            if i < chain_len - counter:
+                codon = chain[i : i+3]
+                aminoacid += table[codon]
             
            
     return aminoacid
