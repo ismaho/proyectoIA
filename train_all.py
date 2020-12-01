@@ -1,21 +1,13 @@
 import os
 import numpy as np
 import pandas as pd
-import scipy
 from sklearn import metrics
-from sklearn.preprocessing import StandardScaler
-from sklearn import decomposition
 import matplotlib.pyplot as plt
-from sklearn.decomposition import PCA
-from sklearn.preprocessing import Normalizer
 from matplotlib import pyplot as plt
-from sklearn.naive_bayes import GaussianNB
-from sklearn import linear_model
-from sklearn import datasets
-from sklearn.metrics import r2_score
 from sklearn.model_selection import train_test_split
 from  sklearn.linear_model import LogisticRegression
 from sklearn.metrics import accuracy_score
+import seaborn as sns
 
 
 def get_data(din):
@@ -29,27 +21,17 @@ def get_data(din):
     bf.columns = genes
     return bf
 
-def get_residuals(data,U):
-    I = np.identity(data.shape[1])
-    z = data.dot(I - U.dot(U.T))
-    residuals = np.power(z,2).sum(axis=1) 
-    return residuals
-
 
 def get_score_threshold(X, y):
     
 
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.33, random_state=42)
-    
-
     reg = LogisticRegression()
-
     y_log = reg.fit(X_train, y_train)
-
     prediction = y_log.predict(X_test)
 
  
-    return prediction, y_test, reg
+    return prediction, X_test, y_test, reg
 
 
 
@@ -72,9 +54,8 @@ for opt in opts:
         y_test = np.zeros(len(X_test), dtype=int)
         y_test[len(normal2):] = 1
       
-        anomal_score, y_test, modelo = get_score_threshold(X_test,y_test)
+        y_pred, X_test, y_test, modelo = get_score_threshold(X_test,y_test)
 
-        y_pred =  anomal_score
         Accuracy = metrics.accuracy_score(y_test, y_pred)
         print("El Accuracy es:", Accuracy)
         Precision = metrics.precision_score(y_test, y_pred)
@@ -90,11 +71,14 @@ for opt in opts:
         print(ret[0],ret[-6:])     
         result += [ ret ]
 
-        data_idx = np.arange(len(y_test))
-        fig, ax = plt.subplots(figsize=(10, 10))
-        plt.scatter(data_idx, anomal_score,s=3,label='normal', color='blue')
-        plt.scatter(data_idx[y_test==1], anomal_score[y_test==1], color='red',s=3,label='tumor')
-        plt.yscale('log')
+        #ax=sns.boxplot(x="Pclass", y="Age",hue="Sex", data= df, linewidth=2.5)
+
+        data_idx = np.arange(len(X_test))
+        plt.subplots(figsize=(10, 10))
+        plt.scatter(data_idx[y_test==1], y_test[y_test==1],s= 10, label='Real Tumor', color='black')
+        plt.scatter(data_idx[y_test==1], y_pred[y_test==1], s= 10, color='red',label='Predicción tumor')
+        plt.scatter(data_idx[y_test==0], y_test[y_test==0],s= 10, label='Real Normal', color='blue')
+        plt.scatter(data_idx[y_test==0], y_pred[y_test==0], s= 10, color='green',label='Predicción normal')
         plt.xlabel('Data point',fontsize=18)
         plt.ylabel('Residual signal',fontsize=18)
         plt.title(opt[0],fontsize=20)
