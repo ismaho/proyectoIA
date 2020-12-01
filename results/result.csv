@@ -1,0 +1,7 @@
+dataset,GTEx(N),TCGA(N),TCGA(C),keep_info,beta,F1,Precision,Recall,Specificity,Accuracy,AUC
+breast,89,110,982,0.1,0.999,0.992
+liver,115,48,295,0.1,0.999,0.974
+lung,313,59,503,0.1,0.999,1.0
+prostate,106,48,426,0.1,0.999,0.936
+stomach,192,33,380,0.1,0.999,0.934
+thyroid,318,53,441,0.1,0.999,0.988
