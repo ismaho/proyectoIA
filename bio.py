@@ -1,4 +1,6 @@
 import numpy as np
+import tensorflow as tf
+import tensorflow_hub as hub
 from Bio.SeqIO import parse 
 from Bio.SeqRecord import SeqRecord 
 from Bio.Seq import Seq 
@@ -6,28 +8,29 @@ from Bio import SeqIO
 from sklearn.naive_bayes import GaussianNB
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import accuracy_score
-from sklearn.neighbors import KNeighborsClassifier
+from sklearn.preprocessing import StandardScaler
+from sklearn.preprocessing import Normalizer
+from sklearn.preprocessing import StandardScaler
+from gensim.test.utils import common_texts
+from gensim.models import Word2Vec
+from   tensorflow.keras import layers
+
+
+embed = hub.load("https://tfhub.dev/google/Wiki-words-250-with-normalization/2")
+# model = "https://tfhub.dev/google/tf2-preview/gnews-swivel-20dim/1"
+
 
 file = open("cowpox_virus_database.fasta") 
 records = parse(file, "fasta")
 
 for record in records:    
-   print("Id: %s" % record.id) 
-   print("Name: %s" % record.name) 
-   print("Description: %s" % record.description) 
-   print("Annotations: %s" % record.annotations) 
    X_init = record.seq
-
 
 
 file_two= open("Aminoacidos_prueba.fasta") 
 records_two = parse(file_two, "fasta")
 
 for record in records_two:    
-   print("Id: %s" % record.id) 
-   print("Name: %s" % record.name) 
-   print("Description: %s" % record.description) 
-   print("Annotations: %s" % record.annotations) 
    Y_init = record.seq
 
 
@@ -35,10 +38,6 @@ file_three= open("Aminoacidos_prueba_2.fasta")
 records_three = parse(file_three, "fasta")
 
 for record in records_three:    
-   print("Id: %s" % record.id) 
-   print("Name: %s" % record.name) 
-   print("Description: %s" % record.description) 
-   print("Annotations: %s" % record.annotations) 
    X_proof = record.seq
 
 def translate(chain):
@@ -60,7 +59,7 @@ def translate(chain):
     'TAC':'Y', 'TAT':'Y', 'TAA':'_', 'TAG':'_',
     'TGC':'C', 'TGT':'C', 'TGA':'_', 'TGG':'W',}
     
-    aminoacid = ""
+    aminoacid = []
     chain_len = len(chain) 
     counter = 0
 
@@ -73,7 +72,7 @@ def translate(chain):
         for i in range(0, len(chain), 3):
             if i < chain_len - counter:
                 codon = chain[i : i+3]
-                aminoacid += table[codon]
+                aminoacid.append(table[codon])
             
            
     return aminoacid
@@ -114,6 +113,7 @@ def Y_convert(chain_letter):
     return aminoacid_number_y
 
 
+
 X = np.array(X_convert(translate(X_init)))
 y = np.array(Y_convert(Y_init))
 X_pf = np.array(X_convert(X_proof))
@@ -123,6 +123,7 @@ print("Arreglo de las cadenas de variables independientes")
 print(X)
 print("Arreglo de los valores objetivos")
 print(y)
+
 
 gnb = GaussianNB()
 
@@ -146,4 +147,55 @@ probability = y_log.predict_proba(X_pf)
 print(probability)
 
 
+#words = translate(X_init)
 
+words = embed(X_init)
+y_word = embed(Y_init)
+X_pf_word= embed(X_proof)
+
+
+for i in range(len(words)):
+    for j in range(i,len(words)):
+        if np.inner(words[i], X_pf_word[j]) == 1.0:
+            contador += 1
+            print("(",words[i], ",", X_pf_word[j],")")
+
+
+# X_keras = "".join(words)
+# y_keras = "".join(Y_init)
+# y_pfkeras = "".join(X_proof)
+
+# print(X_keras)
+# print(type(X_keras))
+
+# hub_layer = hub.KerasLayer(model, output_shape=[20], input_shape=[], dtype=tf.string, trainable=True)
+# hub_layer(X_keras[:3])
+
+# model = tf.keras.Sequential()
+# model.add(hub_layer)
+# model.add(tf.keras.layers.Dense(16, activation='relu'))
+# model.add(tf.keras.layers.Dense(1))
+
+# model.summary()
+
+# model.compile(optimizer='adam',
+#             loss=tf.losses.BinaryCrossentropy(from_logits=True),
+#             metrics=[tf.metrics.BinaryAccuracy(threshold=0.0, name='accuracy')])
+
+# x_val = X_keras[:10000]
+# partial_x_train = X_keras[10000:]
+
+# y_val = y_keras[:10000]
+# partial_y_train = y_keras[10000:]
+
+# history = model.fit(partial_x_train,
+#                 partial_y_train,
+#                 epochs=40,
+#                 batch_size=512,
+#                 validation_data=(x_val, y_val),
+#                 verbose=1)
+
+
+# results = model.evaluate(y_keras, y_pfkeras)
+
+# print(results)
