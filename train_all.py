@@ -32,7 +32,7 @@ def get_score_threshold(X, y):
     prediction = y_log.predict(X_test)
 
  
-    return prediction, X_test, y_test, reg
+    return prediction, X_test, y_test
 
 
 
@@ -57,7 +57,7 @@ for opt in opts:
         
         import pdb; pdb.set_trace()
 
-        y_pred, X_test, y_test, modelo = get_score_threshold(X_test,y_test)
+        y_pred, X_test, y_test = get_score_threshold(X_test,y_test)
 
         Accuracy = metrics.accuracy_score(y_test, y_pred)
         print("El Accuracy es:", Accuracy)
