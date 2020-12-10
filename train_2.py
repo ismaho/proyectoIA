@@ -96,9 +96,8 @@ for opt in opts:
         X_test = pd.concat( [normal2, abnormal] ).values
         y_test = np.zeros(len(X_test), dtype=int)
         y_test[len(normal2):] = 1
-        #import pdb; pdb.set_trace()
 
-    
+        #import pdb; pdb.set_trace()
         y_pred, model, score = get_score_threshold(X_test,y_test)
 
         Accuracy = score
@@ -108,6 +107,7 @@ for opt in opts:
         title = opt[0] + " Confusion matrix"  
         disp = plot_confusion_matrix(model, X_test, y_test, cmap= plt.cm.Blues, normalize = 'true', display_labels = [("No tumor"),("Tumor")] )
         disp.ax_.set_title(title)
+        #disp.savefig('figs/' + opt[0] + 'ConfusionMatrix.png')
         plt.show()
 
         ret = [Accuracy]
@@ -126,14 +126,14 @@ for opt in opts:
         plt.ylabel('Residual signal',fontsize=18)
         plt.title(opt[0],fontsize=20)
         plt.legend(fontsize=18)
+        plt.savefig('figs/' + opt[0] + '.png')
         plt.show()  
-        # #fig.tight_layout()
-        # #fig.savefig('figs/' + opt[0] + '.png')
-        # #plt.close(fig)
+        #plt.close(fig)
+        
 
 
-# with open('results/result.csv','w') as f:
-#     f.write('dataset,GTEx(N),TCGA(N),TCGA(C),keep_info,beta,F1,Precision,Recall,Specificity,Accuracy,AUC\n')
-#     for e in result:
-#         st = ','.join(map(str,e)) + '\n'
-#         f.write(st)
+with open('results/result.csv','w') as f:
+    f.write('dataset,GTEx(N),TCGA(N),TCGA(C),keep_info,beta,F1,Precision,Recall,Specificity,Accuracy,AUC\n')
+    for e in result:
+        st = ','.join(map(str,e)) + '\n'
+        f.write(st)
